@@ -29,16 +29,16 @@
 package oci
 
 import (
-	"github.com/prometheus/common/model"
+	"context"
 	"fmt"
 	"github.com/oracle/oci-go-sdk/common"
-	"time"
 	"github.com/oracle/oci-go-sdk/core"
-	"net"
-	"io/ioutil"
-	log "github.com/sirupsen/logrus"
-	"context"
+	"github.com/prometheus/common/model"
 	"github.com/prometheus/discovery/targetgroup"
+	log "github.com/sirupsen/logrus"
+	"io/ioutil"
+	"net"
+	"time"
 )
 
 const (
