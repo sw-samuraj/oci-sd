@@ -29,21 +29,43 @@
 package main
 
 import (
-	"fmt"
-	flag "github.com/spf13/pflag"
+	"errors"
+	"github.com/pelletier/go-toml"
+	log "github.com/sirupsen/logrus"
+	"github.com/sw-samuraj/oci-sd/oci"
+	"io/ioutil"
 )
 
-var (
-	configFile string
-)
-
-func init() {
-	flag.StringVarP(&configFile, "config-file", "c", "oci-sd.toml", "external config file")
+type config struct {
+	SDConfig oci.SDConfig
 }
 
-func main() {
-	flag.Parse()
+func parseConfig() config {
+	logger := log.WithField("func", "parseConfig")
 
-	config := parseConfig()
-	fmt.Printf("config: %q", config)
+	file, err := readConfigFile()
+	if err != nil {
+		logger.WithFields(log.Fields{"file": configFile, "error": err}).Fatal("can't read a config file")
+	}
+	config := config{}
+	toml.Unmarshal(file, &config)
+
+	if err := config.SDConfig.Validate(); err != nil {
+		logger.WithField("error", err).Fatal("invalid config file")
+	}
+
+	if err := config.SDConfig.ApplyDefault(); err != nil {
+		logger.WithField("error", err).Warn("error to apply default config values")
+	}
+
+	return config
+}
+
+func readConfigFile() ([]byte, error) {
+	configFile, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		return nil, errors.New("config file has not been found")
+	}
+
+	return configFile, nil
 }

@@ -39,6 +39,7 @@ import (
 	"io/ioutil"
 	"net"
 	"time"
+	"github.com/imdario/mergo"
 )
 
 const (
@@ -55,32 +56,25 @@ const (
 )
 
 // defaultSDConfig is the default OCI SD configuration
-var defaultSDConfig = sdConfig{
+var defaultSDConfig = SDConfig{
 	Port:            9100,
 	RefreshInterval: model.Duration(60 * time.Second),
 }
 
-// sdConfig is the configuration for OCI based service discovery.
-type sdConfig struct {
-	User            string         `yaml:"user"`
-	FingerPrint     string         `yaml:"fingerprint"`
-	KeyFile         string         `yaml:"key_file"`
-	PassPhrase      string         `yaml:"pass_phrase,omitempty"`
-	Tenancy         string         `yaml:"tenancy"`
-	Region          string         `yaml:"region"`
-	Compartment     string         `yaml:"compartment"`
-	Port            int            `yaml:"port"`
-	RefreshInterval model.Duration `yaml:"refresh_interval,omitempty"`
+// SDConfig is the configuration for OCI based service discovery.
+type SDConfig struct {
+	User            string
+	FingerPrint     string
+	KeyFile         string
+	PassPhrase      string `toml:",omitempty"`
+	Tenancy         string
+	Region          string
+	Compartment     string
+	Port            int            `toml:",omitempty"`
+	RefreshInterval model.Duration `toml:",omitempty"`
 }
 
-// UnmarshalYAML implements the yaml.Unmarshaler interface.
-func (c *sdConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	*c = defaultSDConfig
-	type plain sdConfig
-	err := unmarshal((*plain)(c))
-	if err != nil {
-		return err
-	}
+func (c *SDConfig) Validate() error {
 	if c.User == "" {
 		return fmt.Errorf("oci sd configuration requires a user")
 	}
@@ -99,20 +93,28 @@ func (c *sdConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	if c.Compartment == "" {
 		return fmt.Errorf("oci sd configuration requires a compartment")
 	}
+
+	return nil
+}
+
+func (c *SDConfig) ApplyDefault() error {
+	if err := mergo.Merge(c, defaultSDConfig); err != nil {
+		return err
+	}
 	return nil
 }
 
 // discovery periodically performs OCI-SD requests. It implements
 // the Discoverer interface.
 type discovery struct {
-	sdConfig  *sdConfig
+	sdConfig  *SDConfig
 	ociConfig common.ConfigurationProvider
 	interval  time.Duration
 	logger    log.Logger
 }
 
 // newDiscovery returns a new OCI discovery which periodically refreshes its targets.
-func newDiscovery(conf *sdConfig, logger *log.Logger) (*discovery, error) {
+func newDiscovery(conf *SDConfig, logger *log.Logger) (*discovery, error) {
 	if logger == nil {
 		logger = log.New()
 	}
