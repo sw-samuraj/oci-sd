@@ -47,18 +47,18 @@ func parseConfig() config {
 	if err != nil {
 		logger.WithFields(log.Fields{"file": configFile, "error": err}).Fatal("can't read a config file")
 	}
-	config := config{}
-	toml.Unmarshal(file, &config)
+	cfg := config{}
+	toml.Unmarshal(file, &cfg)
 
-	if err := config.SDConfig.Validate(); err != nil {
+	if err := cfg.SDConfig.Validate(); err != nil {
 		logger.WithField("error", err).Fatal("invalid config file")
 	}
 
-	if err := config.SDConfig.ApplyDefault(); err != nil {
+	if err := cfg.SDConfig.ApplyDefault(); err != nil {
 		logger.WithField("error", err).Warn("error to apply default config values")
 	}
 
-	return config
+	return cfg
 }
 
 func readConfigFile() ([]byte, error) {

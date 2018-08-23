@@ -34,7 +34,7 @@ import (
 	"github.com/oracle/oci-go-sdk/common"
 	"github.com/oracle/oci-go-sdk/core"
 	"github.com/prometheus/common/model"
-	"github.com/prometheus/discovery/targetgroup"
+	"github.com/prometheus/prometheus/discovery/targetgroup"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net"
@@ -113,8 +113,8 @@ type discovery struct {
 	logger    log.Logger
 }
 
-// newDiscovery returns a new OCI discovery which periodically refreshes its targets.
-func newDiscovery(conf *SDConfig, logger *log.Logger) (*discovery, error) {
+// NewDiscovery returns a new OCI discovery which periodically refreshes its targets.
+func NewDiscovery(conf *SDConfig, logger *log.Logger) (*discovery, error) {
 	if logger == nil {
 		logger = log.New()
 	}
