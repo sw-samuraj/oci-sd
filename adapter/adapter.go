@@ -24,6 +24,7 @@ import (
 	"reflect"
 
 	gklog "github.com/go-kit/kit/log"
+	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/discovery"
 	"github.com/prometheus/prometheus/discovery/targetgroup"
 	log "github.com/sirupsen/logrus"
@@ -59,24 +60,24 @@ func mapToArray(m map[string]*customSD) []customSD {
 func (a *Adapter) generateTargetGroups(allTargetGroups map[string][]*targetgroup.Group) {
 	tempGroups := make(map[string]*customSD)
 	for k, sdTargetGroups := range allTargetGroups {
-		for i, group := range sdTargetGroups {
-			newTargets := make([]string, 0)
-			newLabels := make(map[string]string)
+		for _, group := range sdTargetGroups {
+			for i, targets := range group.Targets {
+				newTargets := make([]string, 0)
+				newLabels := make(map[string]string)
 
-			for _, targets := range group.Targets {
-				for _, target := range targets {
-					newTargets = append(newTargets, string(target))
+				for labelKey, labelValue := range targets {
+					if labelKey == model.AddressLabel {
+						newTargets = append(newTargets, string(labelValue))
+					} else {
+						newLabels[string(labelKey)] = string(labelValue)
+					}
 				}
-			}
-
-			for name, value := range group.Labels {
-				newLabels[string(name)] = string(value)
-			}
-			// Make a unique key, including the current index, in case the sd_type (map key) and group.Source is not unique.
-			key := fmt.Sprintf("%s:%s:%d", k, group.Source, i)
-			tempGroups[key] = &customSD{
-				Targets: newTargets,
-				Labels:  newLabels,
+				// Make a unique key, including the current index, in case the sd_type (map key) and group.Source is not unique.
+				key := fmt.Sprintf("%s:%s:%d", k, group.Source, i)
+				tempGroups[key] = &customSD{
+					Targets: newTargets,
+					Labels:  newLabels,
+				}
 			}
 		}
 	}
