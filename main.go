@@ -29,13 +29,11 @@
 package main
 
 import (
-	flag "github.com/spf13/pflag"
-	"github.com/go-kit/kit/log"
-	"github.com/sw-samuraj/oci-sd/oci"
-	"github.com/sirupsen/logrus"
-	"github.com/prometheus/documentation/examples/custom-sd/adapter"
 	"context"
-	"os"
+	log "github.com/sirupsen/logrus"
+	flag "github.com/spf13/pflag"
+	"github.com/sw-samuraj/oci-sd/adapter"
+	"github.com/sw-samuraj/oci-sd/oci"
 )
 
 var (
@@ -51,16 +49,16 @@ func init() {
 func main() {
 	flag.Parse()
 
-	logger := logrus.New()
+	logger := log.New()
 	cfg := parseConfig()
 	ctx := context.Background()
 
 	disc, err := oci.NewDiscovery(&cfg.SDConfig, logger)
 	if err != nil {
-		logger.WithFields(logrus.Fields{"func": "main", "err": err}).Fatal("can't create a discovery")
+		logger.WithFields(log.Fields{"func": "main", "err": err}).Fatal("can't create a discovery")
 	}
 
-	sdAdapter := adapter.NewAdapter(ctx, outputFile, "ociSD", disc, log.NewLogfmtLogger(os.Stdout))
+	sdAdapter := adapter.NewAdapter(ctx, outputFile, "ociSD", disc, *logger)
 	sdAdapter.Run()
 
 	<-ctx.Done()

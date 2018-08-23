@@ -17,3 +17,10 @@ TBD
 ## Metadata labels
 
 TBD
+
+## License
+
+The **oci-sd** application and the **oci** package are published under
+[BSD 3-Clause](http://opensource.org/licenses/BSD-3-Clause) license.
+
+The **adapter** package is published under [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) license.

@@ -31,6 +31,7 @@ package oci
 import (
 	"context"
 	"fmt"
+	"github.com/imdario/mergo"
 	"github.com/oracle/oci-go-sdk/common"
 	"github.com/oracle/oci-go-sdk/core"
 	"github.com/prometheus/common/model"
@@ -39,7 +40,6 @@ import (
 	"io/ioutil"
 	"net"
 	"time"
-	"github.com/imdario/mergo"
 )
 
 const (
