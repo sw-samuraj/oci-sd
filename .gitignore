@@ -2,3 +2,4 @@
 *.swp
 conf
 oci-sd.json
+go.sum

@@ -2,8 +2,8 @@ module github.com/sw-samuraj/oci-sd
 
 require (
 	cloud.google.com/go v0.26.0 // indirect
-	github.com/Azure/azure-sdk-for-go v11.3.0-beta+incompatible
-	github.com/Azure/go-autorest v10.15.2+incompatible // indirect
+	github.com/Azure/azure-sdk-for-go v0.0.0-20180823151430-bd73d950fa4440dae889bd9917bff7cef539f86e // indirect
+	github.com/Azure/go-autorest v0.0.0-20180823151430-8a25372bbfec739b8719a9e3987400d15ef9e179 // indirect
 	github.com/PuerkitoBio/purell v1.1.0 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20180720115003-f9ffefc3facf // indirect
@@ -12,13 +12,12 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/docker/distribution v2.6.2+incompatible // indirect
-	github.com/emicklei/go-restful v0.0.0-20180823151430-858e58f98abd32bc4d164a08e8d7ac169ae876e2
-	github.com/emicklei/go-restful-swagger12 v0.0.0-20170926063155-7524189396c6 // indirect
+	github.com/emicklei/go-restful v0.0.0-20180823151430-858e58f
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-kit/kit v0.7.0
 	github.com/go-logfmt/logfmt v0.3.0 // indirect
 	github.com/go-openapi/analysis v0.0.0-20180825180245-b006789cd277 // indirect
-	github.com/go-openapi/errors v0.0.0-20180825180252-ffd6e7db0773 // indirect
+	github.com/go-openapi/errors v0.0.0-20180827163446-87bb65328877 // indirect
 	github.com/go-openapi/jsonpointer v0.0.0-20180825180259-52eb3d4b47c6 // indirect
 	github.com/go-openapi/jsonreference v0.0.0-20180825180305-1c6a3fa339f2 // indirect
 	github.com/go-openapi/loads v0.0.0-20180825180312-fd899182a268 // indirect
@@ -60,7 +59,7 @@ require (
 	github.com/samuel/go-zookeeper v0.0.0-20180130194729-c4fab1ac1bec // indirect
 	github.com/sirupsen/logrus v1.0.6
 	github.com/spf13/pflag v1.0.2
-	github.com/ugorji/go v1.1.1 // indirect
+	github.com/ugorji/go v0.0.0-20180820150726-faddd61
 	golang.org/x/crypto v0.0.0-20180820150726-614d502a4dac // indirect
 	golang.org/x/net v0.0.0-20180826012351-8a410e7b638d // indirect
 	golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be // indirect
