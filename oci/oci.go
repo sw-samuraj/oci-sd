@@ -118,7 +118,7 @@ func NewDiscovery(conf *SDConfig, logger *log.Logger) (*discovery, error) {
 	if logger == nil {
 		logger = log.New()
 	}
-	privateKey, err := loadKey(conf.KeyFile)
+	privateKey, err := loadKey(conf.KeyFile, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -248,9 +248,10 @@ func (d *discovery) refresh() (tg *targetgroup.Group, err error) {
 	return tg, nil
 }
 
-func loadKey(keyFile string) (string, error) {
+func loadKey(keyFile string, logger *log.Logger) (string, error) {
 	data, err := ioutil.ReadFile(keyFile)
 	if err != nil {
+		logger.WithFields(log.Fields{"func": "loadKey", "err": err}).Error("can't load a key")
 		return "", err
 	}
 	return string(data), nil
