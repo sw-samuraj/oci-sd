@@ -1,5 +1,7 @@
 # OCI Service Discovery
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/sw-samuraj/oci-sd)](https://github.com/sw-samuraj/oci-sd)
+
 _Prometheus_ service discovery for OCI ([Oracle Cloud Infrastructure](https://cloud.oracle.com/iaas)).
 
 ## How it works
