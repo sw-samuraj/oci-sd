@@ -1,6 +1,7 @@
 # OCI Service Discovery
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/sw-samuraj/oci-sd)](https://github.com/sw-samuraj/oci-sd)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2185/badge)](https://bestpractices.coreinfrastructure.org/projects/2185)
 
 _Prometheus_ service discovery for OCI ([Oracle Cloud Infrastructure](https://cloud.oracle.com/iaas)).
 
