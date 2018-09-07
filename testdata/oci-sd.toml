@@ -1,0 +1,8 @@
+[SDConfig]
+User = "ocid1.user.1"
+FingerPrint = "42:42:42"
+KeyFile = "testdata/oci_api_key.pem"
+PassPhrase = "secret"
+Tenancy = "ocid1.tenancy.1"
+Region = "us-phoenix-1"
+Compartment = "ocid1.compartment.1"
