@@ -4,3 +4,6 @@ conf
 oci-sd.json
 go.sum
 bin/
+.terraform
+*.tfstate
+*.tfstate.backup
