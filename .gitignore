@@ -3,3 +3,4 @@
 conf
 oci-sd.json
 go.sum
+bin/
