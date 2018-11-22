@@ -22,7 +22,7 @@ resource "oci_core_route_table" "oci-sd-rt" {
   }
 }
 
-/*resource "oci_core_security_list" "oci-sd-sl" {
+resource "oci_core_security_list" "oci-sd-sl" {
   compartment_id = "${var.compartment_ocid}"
   vcn_id = "${oci_core_vcn.oci-sd-vcn.id}"
   display_name = "oci-sd-sl"
@@ -50,7 +50,7 @@ resource "oci_core_route_table" "oci-sd-rt" {
       source = "0.0.0.0/0"
     }
   ]
-}*/
+}
 
 resource "oci_core_subnet" "oci-sd-subnet" {
   availability_domain = "${lookup(data.oci_identity_availability_domains.ads.availability_domains[2],"name")}"
@@ -60,8 +60,8 @@ resource "oci_core_subnet" "oci-sd-subnet" {
   compartment_id = "${var.compartment_ocid}"
   vcn_id = "${oci_core_vcn.oci-sd-vcn.id}"
   route_table_id = "${oci_core_route_table.oci-sd-rt.id}"
-/*  security_list_ids = [
+  security_list_ids = [
     "${oci_core_security_list.oci-sd-sl.id}"
-  ]*/
+  ]
   dhcp_options_id = "${oci_core_vcn.oci-sd-vcn.default_dhcp_options_id}"
 }

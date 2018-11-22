@@ -60,3 +60,9 @@ variable "instance_image_ocid" {
 variable "BootStrap" {
   default = "./userdata/bootstrap"
 }
+
+/*
+variable "ssh_public_key" {
+  description = "The path to the SSL public key stored on your computer."
+}
+*/
