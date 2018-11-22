@@ -205,7 +205,7 @@ func (d *discovery) refresh() (tg *targetgroup.Group, err error) {
 			},
 		)
 		if err != nil {
-			d.logger.WithField("ocid", instance.Id).Error("could not obtain attached vnic")
+			d.logger.WithField("ocid", *instance.Id).Error("could not obtain attached vnic")
 			continue
 		}
 		for _, vnic := range res.Items {
@@ -214,7 +214,9 @@ func (d *discovery) refresh() (tg *targetgroup.Group, err error) {
 				core.GetVnicRequest{VnicId: vnic.VnicId},
 			)
 			if err != nil {
-				d.logger.WithField("ocid", vnic.VnicId).Error("could not obtain vnic")
+				if instance.LifecycleState != core.InstanceLifecycleStateTerminated {
+					d.logger.WithFields(log.Fields{"ocid": *vnic.VnicId, "instance-state": instance.LifecycleState}).Error("could not obtain vnic")
+				}
 				continue
 			}
 			if *res.IsPrimary {
