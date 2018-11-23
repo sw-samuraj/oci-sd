@@ -69,27 +69,87 @@ adapter = adapter.NewAdapter(ctx, sdOutputFile, "ociSD", disc, *logger)
 adapter.Run()
 ```
 
+## How to build a standalone application
+
+Prerequisites for build of `oci-sd` as a standalone application is `go1.11`+ and `make`:
+
+    make build
+
 ## OCI-SD configuration
 
 ### Command line flags
 
-TBD
+You can run `oci-sd --help` to see command line configuration flags:
+
+    $ ./bin/oci-sd --help
+    Usage of ./bin/oci-sd:
+      -c, --config-file string   external config file (default "oci-sd.toml")
+      -o, --output-file string   output file for file_sd compatible file (default "oci-sd.json")
 
 ### Configuration file
 
-TBD
+The configuration file (e.g. `oci-sd.toml`) should contain following mandatory values:
+
+```toml
+[SDConfig]
+User = "ocid1.user.1"
+FingerPrint = "42:42:42"
+KeyFile = "/home/user/.oci/oci_api_key.pem"
+PassPhrase = "secret"
+Tenancy = "ocid1.tenancy.1"
+Region = "us-phoenix-1"
+Compartment = "ocid1.compartment.1"
+```
+
+Additionally, there can be following optional values:
+
+```toml
+Port = 4242               # default port is 9100
+RefreshInterval = "120s"  # default interval is 60 seconds
+```
 
 ## Prometheus configuration
 
-TBD
+Here is _Prometheus_ configuration for the file based service discovery:
+
+```yaml
+scrape_configs:
+  - job_name: 'oci-sd'
+    scrape_interval: 5s
+    file_sd_configs:
+    - files:
+      - oci-sd.json
+      refresh_interval: 1m
+    relabel_configs:
+    - source_labels: ['__meta_oci_public_ip']
+      target_label: '__address__'
+      replacement: '${1}:9100'
+```
 
 ## Metadata labels
 
-TBD
+The following meta-labels are available on targets during re-labeling:
+
+* `__meta_oci_availability_domain`: the availability domain in which the instance is running
+* `__meta_oci_compartment_id`: OCID of the used compartment
+* `__meta_oci_defined_tag_<namespace>_<tagkey>`: each defined tag value of the instance
+* `__meta_oci_freeform_tag_<tagkey>`: each freeform tag value of the instance
+* `__meta_oci_instance_id`: OCID of the instance
+* `__meta_oci_instance_name`: the name of the instance
+* `__meta_oci_instance_state`: the state of the instance
+* `__meta_oci_private_ip`: the private IP address of the instance
+* `__meta_oci_public_ip`: the public IP address of the instance, if available
 
 ## Example
 
-TBD
+You can find an example for standalone application in the [example](example) directory. It contains:
+
+* `oci-sd` configuration file.
+* [Terraform](//www.terraform.io/) scripts which create 3 OCI instances with running
+  [node_exporter](//github.com/prometheus/node_exporter)s.
+* _Prometheus_ configuration file with pre-configured `file_sd` scrape config and `oci-sd` specific re-labeling.
+
+See [example/README.md](example/README.md) file for more details.
 
 ## License
 
