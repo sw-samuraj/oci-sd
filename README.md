@@ -7,6 +7,15 @@
 
 [Prometheus](https://github.com/prometheus/prometheus) service discovery for OCI ([Oracle Cloud Infrastructure](https://cloud.oracle.com/iaas)).
 
+## Content
+
+1. [How it works](#how-it-works)
+1. [How to use it](#how-to-use-it)
+1. [How to build it](#how-to-build-a-standalone-application)
+1. [Configuration](#configuration)
+1. [Metadata labels](#metadata-labels)
+1. [License](#license)
+
 ## How it works
 
 Unfortunately, _Prometheus_ team [doesn't accept new service discovery
@@ -75,9 +84,11 @@ Prerequisites for build of `oci-sd` as a standalone application is `go1.11`+ and
 
     make build
 
-## OCI-SD configuration
+## Configuration
 
-### Command line flags
+### OCI-SD configuration
+
+**Command line flags**
 
 You can run `oci-sd --help` to see command line configuration flags:
 
@@ -86,7 +97,7 @@ You can run `oci-sd --help` to see command line configuration flags:
       -c, --config-file string   external config file (default "oci-sd.toml")
       -o, --output-file string   output file for file_sd compatible file (default "oci-sd.json")
 
-### Configuration file
+**Configuration file**
 
 The configuration file (e.g. `oci-sd.toml`) should contain following mandatory values:
 
@@ -108,7 +119,7 @@ Port = 4242               # default port is 9100
 RefreshInterval = "120s"  # default interval is 60 seconds
 ```
 
-## Prometheus configuration
+### Prometheus configuration
 
 Here is _Prometheus_ configuration for the file based service discovery:
 
