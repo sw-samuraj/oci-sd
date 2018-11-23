@@ -2,9 +2,9 @@
 
 This example/tutorial shows how to:
 
-* start 3 testing OCI instances,
-* configure and run a standalone `oci-sd` application,
-* start _Prometheus_ with `file_sd` configuration.
+* start 3 testing OCI instances, with running `node_exporter`,
+* configure and run a standalone `oci-sd` application, which discovers these OCI instances,
+* start _Prometheus_ with `file_sd` configuration, which starts to monitor these OCI instances.
 
 ## Testing OCI instances
 
