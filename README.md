@@ -32,13 +32,54 @@ be imported to your application.
 
 ### A standalone application
 
-qwer
+You can build and run a command line application `oci-sd`. Once properly configured (see the
+[Configuration](#oci-sd-configuration) section), the application starts to query OCI for list of instances
+and write those to the `oci-sd.json` file.
+
+You can run the application with default values for configuration and output files:
+
+    ./bin/oci-sd
+
+Or you can provide specific values via command-line flags:
+
+    ./bin/oci-sd -c conf/oci-sd.toml -o conf/prometheus-sd.json
+
+See an [Example](#example) section for a practical example and tutorial.
 
 ### Golang package
 
-qwer
+If you don't want to have a separate standalone application for service discovery, you can include the `oci`
+(and probably the `adapter`) package(s) into your application.
 
-## Configuration
+Here is an example usage:
+
+```go
+ociConfig := oci.SDConfig{
+    // populate the config
+}
+logger := logrus.StandardLogger()
+
+disc, err := oci.NewDiscovery(&ociConfig, logger)
+if err != nil {
+    logger.WithFields(logrus.Fields{"func": "main", "err": err}).Fatal("can't create OCI discovery")
+}
+
+sdOutputFile := "oci-sd.json"
+adapter = adapter.NewAdapter(ctx, sdOutputFile, "ociSD", disc, *logger)
+adapter.Run()
+```
+
+## OCI-SD configuration
+
+### Command line flags
+
+TBD
+
+### Configuration file
+
+TBD
+
+## Prometheus configuration
 
 TBD
 
