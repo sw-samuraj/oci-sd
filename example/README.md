@@ -45,15 +45,20 @@ If you see something like following (abridged) output, you are ready for service
 
 ## oci-sd
 
-TBD
+**Prerequisities:** `oci-sd` binary
+
+1. Edit `example/conf/oci-sd.toml` that it contains proper values for your OCI tenancy (see
+   [CLI Configuration Information](https://docs.cloud.oracle.com/iaas/Content/API/Concepts/sdkconfig.htm)).
+1. `./bin/oci-sd -c example/conf/oci-sd.toml -o example/prometheus/oci-sd.json`
 
 ## Prometheus
 
-* `oci-sd` configuration file.
-  [node_exporter](//github.com/prometheus/node_exporter)s.
-* _Prometheus_ configuration file with pre-configured `file_sd` scrape config and `oci-sd` specific re-labeling.
-TBD
+**Prerequisities:** [Prometheus](//prometheus.io/)
 
-    ./bin/oci-sd -c example/conf/oci-sd.toml -o example/prometheus/oci-sd.json
+1. `./prometheus --config.file=<path-to-oci-sd-directory>/example/prometheus/prometheus.yml`
+1. Based on the configured refresh interval, check the `example/prometheus/oci-sd.json` file if it was populated
+   with (OCI instances) targets.
+1. Check _Service Discovery_ console: http://localhost:9090/service-discovery
+1. Check _Targets_ console: http://localhost:9090/targets
 
-    ./prometheus --config.file=/home/guido/go/src/github.com/sw-samuraj/oci-sd/example/prometheus/prometheus.yml
+![Prometheus targets](../docs/Prometheus-targets.png)
