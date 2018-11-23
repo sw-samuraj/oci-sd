@@ -40,7 +40,7 @@ Please note, that those discoveries/scrapings are independent of each other.
 OCI-SD can be used in two ways: either as a standalone, CLI application, or as a _Golang_ package which can
 be imported to your application.
 
-### A standalone application
+### Standalone application
 
 You can build and run a command line application `oci-sd`. Once properly configured (see the
 [Configuration](#oci-sd-configuration) section), the application starts to query OCI for list of instances
