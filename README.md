@@ -14,6 +14,7 @@
 1. [How to build it](#how-to-build-a-standalone-application)
 1. [Configuration](#configuration)
 1. [Metadata labels](#metadata-labels)
+1. [Example](#example)
 1. [License](#license)
 
 ## How it works
