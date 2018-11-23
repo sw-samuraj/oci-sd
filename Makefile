@@ -1,7 +1,7 @@
 export GO111MODULE=on
 
 test:
-	go test -v ./...
+	go test -v -cover ./...
 
 build:
 	go build -o bin/oci-sd

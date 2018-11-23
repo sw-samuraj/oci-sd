@@ -1,5 +1,9 @@
 .idea
 *.swp
-conf
+conf/
+!example/conf/
 oci-sd.json
 go.sum
+bin/
+.terraform
+*.tfstate*
