@@ -74,6 +74,7 @@ type SDConfig struct {
 	RefreshInterval model.Duration `toml:",omitempty"`
 }
 
+// Validate function validates that the SDConfig struct contains all the mandatory fields
 func (c *SDConfig) Validate() error {
 	if c.User == "" {
 		return fmt.Errorf("oci sd configuration requires a user")
@@ -97,6 +98,8 @@ func (c *SDConfig) Validate() error {
 	return nil
 }
 
+// ApplyDefault function applies default values to the optional fields of the SDConfig struct
+// if these are not provided.
 func (c *SDConfig) ApplyDefault() error {
 	if err := mergo.Merge(c, defaultSDConfig); err != nil {
 		return err
@@ -104,9 +107,9 @@ func (c *SDConfig) ApplyDefault() error {
 	return nil
 }
 
-// discovery periodically performs OCI-SD requests. It implements
+// Discovery periodically performs OCI-SD requests. It implements
 // the Discoverer interface.
-type discovery struct {
+type Discovery struct {
 	sdConfig  *SDConfig
 	ociConfig common.ConfigurationProvider
 	interval  time.Duration
@@ -114,7 +117,7 @@ type discovery struct {
 }
 
 // NewDiscovery returns a new OCI discovery which periodically refreshes its targets.
-func NewDiscovery(conf *SDConfig, logger *log.Logger) (*discovery, error) {
+func NewDiscovery(conf *SDConfig, logger *log.Logger) (*Discovery, error) {
 	if logger == nil {
 		logger = log.New()
 	}
@@ -130,7 +133,7 @@ func NewDiscovery(conf *SDConfig, logger *log.Logger) (*discovery, error) {
 		privateKey,
 		&conf.PassPhrase,
 	)
-	return &discovery{
+	return &Discovery{
 		sdConfig:  conf,
 		ociConfig: ociConfig,
 		interval:  time.Duration(conf.RefreshInterval),
@@ -139,7 +142,7 @@ func NewDiscovery(conf *SDConfig, logger *log.Logger) (*discovery, error) {
 }
 
 // Run implements the Discoverer interface.
-func (d *discovery) Run(ctx context.Context, ch chan<- []*targetgroup.Group) {
+func (d *Discovery) Run(ctx context.Context, ch chan<- []*targetgroup.Group) {
 	ticker := time.NewTicker(d.interval)
 	defer ticker.Stop()
 
@@ -175,7 +178,7 @@ func (d *discovery) Run(ctx context.Context, ch chan<- []*targetgroup.Group) {
 	}
 }
 
-func (d *discovery) refresh() (tg *targetgroup.Group, err error) {
+func (d *Discovery) refresh() (tg *targetgroup.Group, err error) {
 	tg = &targetgroup.Group{
 		Source: d.sdConfig.Region,
 	}
