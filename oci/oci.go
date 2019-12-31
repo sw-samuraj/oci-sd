@@ -31,15 +31,16 @@ package oci
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
+	"net"
+	"time"
+
 	"github.com/imdario/mergo"
 	"github.com/oracle/oci-go-sdk/common"
 	"github.com/oracle/oci-go-sdk/core"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/discovery/targetgroup"
 	log "github.com/sirupsen/logrus"
-	"io/ioutil"
-	"net"
-	"time"
 )
 
 const (
@@ -231,7 +232,7 @@ func (d *Discovery) refresh() (tg *targetgroup.Group, err error) {
 					ociLabelAvailabilityDomain: model.LabelValue(*instance.AvailabilityDomain),
 					ociLabelPrivateIP:          model.LabelValue(*res.PrivateIp),
 				}
-				if *res.PublicIp != "" {
+				if res.PublicIp != nil && *res.PublicIp != "" {
 					labels[ociLabelPublicIP] = model.LabelValue(*res.PublicIp)
 				}
 				addr := net.JoinHostPort(*res.PrivateIp, fmt.Sprintf("%d", d.sdConfig.Port))
