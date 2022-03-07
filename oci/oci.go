@@ -33,11 +33,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net"
+	"strings"
 	"time"
 
 	"github.com/imdario/mergo"
 	"github.com/oracle/oci-go-sdk/common"
 	"github.com/oracle/oci-go-sdk/core"
+	"github.com/oracle/oci-go-sdk/v40/common/auth"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/discovery/targetgroup"
 	log "github.com/sirupsen/logrus"
@@ -64,15 +66,17 @@ var defaultSDConfig = SDConfig{
 
 // SDConfig is the configuration for OCI based service discovery.
 type SDConfig struct {
-	User            string
-	FingerPrint     string
-	KeyFile         string
-	PassPhrase      string `toml:",omitempty"`
-	Tenancy         string
-	Region          string
-	Compartment     string
-	Port            int            `toml:",omitempty"`
-	RefreshInterval model.Duration `toml:",omitempty"`
+	User              string
+	FingerPrint       string
+	KeyFile           string
+	PassPhrase        string `toml:",omitempty"`
+	Tenancy           string
+	Region            string
+	Compartment       string
+	Port              int            `toml:",omitempty"`
+	RefreshInterval   model.Duration `toml:",omitempty"`
+	InstancePrincipal bool
+	Sanitise          bool
 }
 
 // Validate function validates that the SDConfig struct contains all the mandatory fields
@@ -122,18 +126,31 @@ func NewDiscovery(conf *SDConfig, logger *log.Logger) (*Discovery, error) {
 	if logger == nil {
 		logger = log.New()
 	}
-	privateKey, err := loadKey(conf.KeyFile, logger)
-	if err != nil {
-		return nil, err
+
+	var ociConfig common.ConfigurationProvider
+	var err error
+
+	if conf.InstancePrincipal {
+		ociConfig, err = auth.InstancePrincipalConfigurationProvider()
+		if err != nil {
+			log.Errorln("Unable to create InstancePrincipalConfigurationProvider err", err)
+			return nil, err
+		}
+	} else {
+		privateKey, err := loadKey(conf.KeyFile, logger)
+		if err != nil {
+			return nil, err
+		}
+		ociConfig = common.NewRawConfigurationProvider(
+			conf.Tenancy,
+			conf.User,
+			conf.Region,
+			conf.FingerPrint,
+			privateKey,
+			&conf.PassPhrase,
+		)
 	}
-	ociConfig := common.NewRawConfigurationProvider(
-		conf.Tenancy,
-		conf.User,
-		conf.Region,
-		conf.FingerPrint,
-		privateKey,
-		&conf.PassPhrase,
-	)
+
 	return &Discovery{
 		sdConfig:  conf,
 		ociConfig: ociConfig,
@@ -238,10 +255,17 @@ func (d *Discovery) refresh() (tg *targetgroup.Group, err error) {
 				addr := net.JoinHostPort(*res.PrivateIp, fmt.Sprintf("%d", d.sdConfig.Port))
 				labels[model.AddressLabel] = model.LabelValue(addr)
 				for key, value := range instance.FreeformTags {
+					if d.sdConfig.Sanitise {
+						key = sanitiseTags(key)
+					}
 					labels[ociLabelFreeformTag+model.LabelName(key)] = model.LabelValue(value)
 				}
 				for ns, tags := range instance.DefinedTags {
 					for key, value := range tags {
+						if d.sdConfig.Sanitise {
+							ns = sanitiseTags(ns)
+							key = sanitiseTags(key)
+						}
 						labelName := model.LabelName(ociLabelDefinedTag + ns + "_" + key)
 						labels[labelName] = model.LabelValue(value.(string))
 					}
@@ -261,4 +285,10 @@ func loadKey(keyFile string, logger *log.Logger) (string, error) {
 		return "", err
 	}
 	return string(data), nil
+}
+
+func sanitiseTags(value string) string {
+	value = strings.ReplaceAll(value, ":", "_")
+	value = strings.ReplaceAll(value, "-", "_")
+	return value
 }

@@ -29,6 +29,10 @@ github.com/mwitkow/go-conntrack
 ## explicit
 github.com/oracle/oci-go-sdk/common
 github.com/oracle/oci-go-sdk/core
+# github.com/oracle/oci-go-sdk/v40 v40.4.0
+## explicit
+github.com/oracle/oci-go-sdk/v40/common
+github.com/oracle/oci-go-sdk/v40/common/auth
 # github.com/pelletier/go-toml v1.8.1
 ## explicit
 github.com/pelletier/go-toml
