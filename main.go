@@ -30,6 +30,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	log "github.com/sirupsen/logrus"
 	flag "github.com/spf13/pflag"
@@ -54,9 +55,13 @@ func init() {
 	flag.BoolVarP(&sanitise, "sanitise", "s", false, "sanitise instance tags to fit Prometheus requirements by removing special characters (:, -)")
 }
 
+const LOG_PATH = "/var/log/oci-sd/"
+
 func main() {
 	flag.Parse()
 	logger := log.New()
+	logSetup(LOG_PATH, logger)
+
 	if authvar {
 		logger.Info("initialising with instance principal authentication")
 		if compartment == "" {
@@ -83,4 +88,21 @@ func main() {
 	sdAdapter.Run()
 
 	<-ctx.Done()
+}
+
+func logSetup(logPath string, logger *log.Logger) {
+	logger.SetReportCaller(true)
+	err := os.MkdirAll(logPath, 0755)
+	if err != nil {
+		logger.Fatal("Can't create a log path. Err: ", err)
+	}
+	Formatter := new(log.TextFormatter)
+	Formatter.TimestampFormat = "02-01-2006 15:04:05"
+	Formatter.FullTimestamp = true
+	logger.SetFormatter(Formatter)
+	logFile, err := os.OpenFile(logPath+"oci-sd.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if err != nil {
+		logger.Fatal("Can't create a log path. Err: ", err)
+	}
+	logger.SetOutput(logFile)
 }
