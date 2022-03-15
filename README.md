@@ -95,8 +95,11 @@ You can run `oci-sd --help` to see command line configuration flags:
 
     $ ./bin/oci-sd --help
     Usage of ./bin/oci-sd:
+      -t, --compartment string   compartment for discovering targets
       -c, --config-file string   external config file (default "oci-sd.toml")
+      -i, --instance-principal   initialise with instance principal authentication
       -o, --output-file string   output file for file_sd compatible file (default "oci-sd.json")
+      -s, --sanitise             sanitise instance tags to fit Prometheus requirements by removing special characters (:, -)
 
 **Configuration file**
 
@@ -126,40 +129,44 @@ Here is _Prometheus_ configuration for the file based service discovery:
 
 ```yaml
 scrape_configs:
-  - job_name: 'oci-sd'
+  - job_name: "oci-sd"
     scrape_interval: 5s
     file_sd_configs:
-    - files:
-      - oci-sd.json
-      refresh_interval: 1m
+      - files:
+          - oci-sd.json
+        refresh_interval: 1m
     relabel_configs:
-    - source_labels: ['__meta_oci_public_ip']
-      target_label: '__address__'
-      replacement: '${1}:9100'
+      - source_labels: ["__meta_oci_public_ip"]
+        target_label: "__address__"
+        replacement: "${1}:9100"
 ```
 
 ## Metadata labels
 
 The following meta-labels are available on targets during re-labeling:
 
-* `__meta_oci_availability_domain`: the availability domain in which the instance is running
-* `__meta_oci_compartment_id`: OCID of the used compartment
-* `__meta_oci_defined_tag_<namespace>_<tagkey>`: each defined tag value of the instance
-* `__meta_oci_freeform_tag_<tagkey>`: each freeform tag value of the instance
-* `__meta_oci_instance_id`: OCID of the instance
-* `__meta_oci_instance_name`: the name of the instance
-* `__meta_oci_instance_state`: the state of the instance
-* `__meta_oci_private_ip`: the private IP address of the instance
-* `__meta_oci_public_ip`: the public IP address of the instance, if available
+- `__meta_oci_availability_domain`: the availability domain in which the instance is running
+- `__meta_oci_compartment_id`: OCID of the used compartment
+- `__meta_oci_defined_tag_<namespace>_<tagkey>`: each defined tag value of the instance
+- `__meta_oci_freeform_tag_<tagkey>`: each freeform tag value of the instance
+- `__meta_oci_instance_id`: OCID of the instance
+- `__meta_oci_instance_name`: the name of the instance
+- `__meta_oci_instance_state`: the state of the instance
+- `__meta_oci_private_ip`: the private IP address of the instance
+- `__meta_oci_public_ip`: the public IP address of the instance, if available
+
+## Logs
+
+The default log location is `/var/log/oci-sd/oci-sd.log`. It can be changed by editing the LOG_PATH variable.
 
 ## Example
 
 You can find an example for standalone application in the [example](example) directory. It contains:
 
-* `oci-sd` configuration file.
-* [Terraform](//www.terraform.io/) scripts which create 3 OCI instances with running
+- `oci-sd` configuration file.
+- [Terraform](//www.terraform.io/) scripts which create 3 OCI instances with running
   [node_exporter](//github.com/prometheus/node_exporter)s.
-* _Prometheus_ configuration file with pre-configured `file_sd` scrape config and `oci-sd` specific re-labeling.
+- _Prometheus_ configuration file with pre-configured `file_sd` scrape config and `oci-sd` specific re-labeling.
 
 See [example/README.md](example/README.md) file for more details.
 
