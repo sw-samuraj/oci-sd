@@ -94,7 +94,7 @@ func logSetup(logPath string, logger *log.Logger) {
 	logger.SetReportCaller(true)
 	err := os.MkdirAll(logPath, 0755)
 	if err != nil {
-		logger.Fatal("Can't create a log path. Err: ", err)
+		logger.Warn("Can't create a log path. Err: ", err)
 	}
 	Formatter := new(log.TextFormatter)
 	Formatter.TimestampFormat = "02-01-2006 15:04:05"
@@ -102,7 +102,7 @@ func logSetup(logPath string, logger *log.Logger) {
 	logger.SetFormatter(Formatter)
 	logFile, err := os.OpenFile(logPath+"oci-sd.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
-		logger.Fatal("Can't create a log path. Err: ", err)
+		logger.Warn("Can't create a log path. Err: ", err)
 	}
 	logger.SetOutput(logFile)
 }

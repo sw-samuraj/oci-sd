@@ -37,9 +37,9 @@ import (
 	"time"
 
 	"github.com/imdario/mergo"
-	"github.com/oracle/oci-go-sdk/common"
-	"github.com/oracle/oci-go-sdk/core"
+	"github.com/oracle/oci-go-sdk/v40/common"
 	"github.com/oracle/oci-go-sdk/v40/common/auth"
+	"github.com/oracle/oci-go-sdk/v40/core"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/discovery/targetgroup"
 	log "github.com/sirupsen/logrus"

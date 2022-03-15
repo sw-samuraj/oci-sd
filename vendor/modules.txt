@@ -25,14 +25,11 @@ github.com/jpillora/backoff
 github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f
 github.com/mwitkow/go-conntrack
-# github.com/oracle/oci-go-sdk v24.3.0+incompatible
-## explicit
-github.com/oracle/oci-go-sdk/common
-github.com/oracle/oci-go-sdk/core
 # github.com/oracle/oci-go-sdk/v40 v40.4.0
 ## explicit
 github.com/oracle/oci-go-sdk/v40/common
 github.com/oracle/oci-go-sdk/v40/common/auth
+github.com/oracle/oci-go-sdk/v40/core
 # github.com/pelletier/go-toml v1.8.1
 ## explicit
 github.com/pelletier/go-toml
