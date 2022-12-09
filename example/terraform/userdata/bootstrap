@@ -3,12 +3,13 @@
 # Install node_exporter
 useradd -m -s /bin/bash prometheus
 cd /home/prometheus
-wget https://github.com/prometheus/node_exporter/releases/download/v0.16.0/node_exporter-0.16.0.linux-amd64.tar.gz
-tar -xzvf node_exporter-0.16.0.linux-amd64.tar.gz
-mv node_exporter-0.16.0.linux-amd64 node_exporter
+wget https://github.com/prometheus/node_exporter/releases/download/v1.5.0/node_exporter-1.5.0.linux-amd64.tar.gz
+tar -xzvf node_exporter-1.5.0.linux-amd64.tar.gz
+mv node_exporter-1.5.0.linux-amd64 node_exporter
+rm node_exporter-1.5.0.linux-amd64.tar.gz
 chown -R prometheus:prometheus node_exporter
 
-# Start node_exporter as a service
+# Register node_exporter as a service
 cat <<EOF >/etc/systemd/system/node_exporter.service
 [Unit]
 Description=Node Exporter
@@ -22,8 +23,13 @@ ExecStart=/home/prometheus/node_exporter/node_exporter
 [Install]
 WantedBy=default.target
 EOF
-systemctl start node_exporter
 
 # Open firewall for node_exporter
 firewall-offline-cmd --add-port=9100/tcp
 systemctl reload firewalld
+
+# whitelist in SELinux
+chcon -t bin_t /home/prometheus/node_exporter/node_exporter
+
+# start node exporter
+systemctl start node_exporter

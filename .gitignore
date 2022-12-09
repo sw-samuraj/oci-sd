@@ -6,4 +6,5 @@ oci-sd.json
 go.sum
 bin/
 .terraform
+.terraform.lock.hcl
 *.tfstate*

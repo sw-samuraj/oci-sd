@@ -42,18 +42,26 @@ variable "subnet-cidr" {
 }
 
 variable "instance_shape" {
-  default = "VM.Standard2.1"
+  default = "VM.Standard.E4.Flex"
+}
+
+variable "instance_ocpus" {
+  default = 1
+}
+
+variable "instance_shape_config_memory_in_gbs" {
+  default = 8
 }
 
 variable "instance_image_ocid" {
-  description = "Oracle-provided image 'Oracle-Linux-7.4-2018.02.21-1'"
-  type = "map"
+  description = "Oracle-provided image 'Oracle-Linux-8.6-2022.10.04-0'"
+  type = map(string)
   default = {
     // See https://docs.us-phoenix-1.oraclecloud.com/images/
-    us-phoenix-1 = "ocid1.image.oc1.phx.aaaaaaaaupbfz5f5hdvejulmalhyb6goieolullgkpumorbvxlwkaowglslq"
-    us-ashburn-1   = "ocid1.image.oc1.iad.aaaaaaaajlw3xfie2t5t52uegyhiq2npx7bqyu4uvi2zyu3w3mqayc2bxmaa"
-    eu-frankfurt-1 = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaa7d3fsb6272srnftyi4dphdgfjf6gurxqhmv6ileds7ba3m2gltxq"
-    uk-london-1    = "ocid1.image.oc1.uk-london-1.aaaaaaaaa6h6gj6v4n56mqrbgnosskq63blyv2752g36zerymy63cfkojiiq"
+    us-phoenix-1 = "ocid1.image.oc1.phx.aaaaaaaaqdlspgo5d5tdew5m3ntswbkxfoclc35nvcv3r3a7a5wjwxphuoeq"
+    us-ashburn-1   = "ocid1.image.oc1.iad.aaaaaaaaorro6lk6mljfs3dafptdskbupyjjbindwgqc6nf4ohbe3ucklrqq"
+    eu-frankfurt-1 = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaa47555lp4mjbiuf64doxtnbimrwk57m4sfgu3gonaf5i2cteil5iq"
+    uk-london-1    = "ocid1.image.oc1.uk-london-1.aaaaaaaa5e2iiw5k4gclwn2akqjxl7xwtohw5ivx3ly7q3cjn6ibggx5ywla"
   }
 }
 
@@ -66,3 +74,5 @@ variable "ssh_public_key" {
   description = "The path to the SSL public key stored on your computer."
 }
 */
+
+
