@@ -26,30 +26,36 @@ resource "oci_core_security_list" "oci-sd-sl" {
   compartment_id = "${var.compartment_ocid}"
   vcn_id = "${oci_core_vcn.oci-sd-vcn.id}"
   display_name = "oci-sd-sl"
-  egress_security_rules = [
-    {
+  
+  // allow all egress traffic
+  egress_security_rules {
       protocol = "6"
       destination = "0.0.0.0/0"
-    }]
-  ingress_security_rules = [
-    {
-      tcp_options {
-        "max" = 22
-        "min" = 22
-      }
-
-      protocol = "6"
-      source = "0.0.0.0/0"
-    },{
-      tcp_options {
-        "max" = 9100
-        "min" = 9100
-      }
-
-      protocol = "6"
-      source = "0.0.0.0/0"
     }
-  ]
+
+  // allow inbound ssh traffic
+  ingress_security_rules {
+    protocol  = "6" // tcp
+    source    = "0.0.0.0/0"
+    stateless = false
+
+    tcp_options {
+      min = 22
+      max = 22
+    }
+  }
+
+  // allow inbound prometheus traffic
+  ingress_security_rules {
+    protocol  = "6" // tcp
+    source    = "0.0.0.0/0"
+    stateless = false
+
+    tcp_options {
+      min = 9100
+      max = 9100
+    }
+  }
 }
 
 resource "oci_core_subnet" "oci-sd-subnet" {
