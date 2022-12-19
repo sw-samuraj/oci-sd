@@ -97,6 +97,7 @@ You can run `oci-sd --help` to see command line configuration flags:
     Usage of ./bin/oci-sd:
       -t, --compartment string   compartment for discovering targets
       -c, --config-file string   external config file (default "oci-sd.toml")
+      -l, --log-directory string log file location (default "/var/log/oci-sd/")
       -i, --instance-principal   initialise with instance principal authentication
       -o, --output-file string   output file for file_sd compatible file (default "oci-sd.json")
       -s, --sanitise             sanitise instance tags to fit Prometheus requirements by removing special characters (:, -)
@@ -157,7 +158,7 @@ The following meta-labels are available on targets during re-labeling:
 
 ## Logs
 
-The default log location is `/var/log/oci-sd/oci-sd.log`. It can be changed by editing the LOG_PATH variable.
+The default log location is `/var/log/oci-sd/oci-sd.log`. It can be changed by passing in a custom --log-directory variable.
 
 ## Example
 
