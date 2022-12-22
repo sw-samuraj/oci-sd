@@ -39,28 +39,29 @@ import (
 )
 
 var (
-	configFile  string
-	outputFile  string
-	authvar     bool
-	cfg         config
-	compartment string
-	sanitise    bool
+	configFile   string
+	outputFile   string
+	logDirectory string
+	authvar      bool
+	cfg          config
+	compartment  string
+	sanitise     bool
 )
 
 func init() {
 	flag.StringVarP(&configFile, "config-file", "c", "oci-sd.toml", "external config file")
 	flag.StringVarP(&outputFile, "output-file", "o", "oci-sd.json", "output file for file_sd compatible file")
+	flag.StringVarP(&logDirectory, "log-directory", "l", "/var/log/oci-sd/", "log directory")
 	flag.BoolVarP(&authvar, "instance-principal", "i", false, "initialise with instance principal authentication")
 	flag.StringVarP(&compartment, "compartment", "t", "", "compartment for discovering targets")
 	flag.BoolVarP(&sanitise, "sanitise", "s", false, "sanitise instance tags to fit Prometheus requirements by removing special characters (:, -)")
 }
 
-const LOG_PATH = "/var/log/oci-sd/"
-
 func main() {
 	flag.Parse()
 	logger := log.New()
-	logSetup(LOG_PATH, logger)
+
+	logSetup(logDirectory, logger)
 
 	if authvar {
 		logger.Info("initialising with instance principal authentication")

@@ -8,3 +8,7 @@ bin/
 .terraform
 .terraform.lock.hcl
 *.tfstate*
+my-*
+oci-sd
+oci-sd.log
+
