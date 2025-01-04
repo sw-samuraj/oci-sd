@@ -10,6 +10,8 @@ github.com/go-kit/log
 github.com/go-kit/log/level
 # github.com/go-logfmt/logfmt v0.5.1
 github.com/go-logfmt/logfmt
+# github.com/gofrs/flock v0.8.1
+github.com/gofrs/flock
 # github.com/golang/protobuf v1.5.2
 github.com/golang/protobuf/proto
 github.com/golang/protobuf/ptypes
@@ -27,9 +29,12 @@ github.com/matttproud/golang_protobuf_extensions/pbutil
 github.com/mwitkow/go-conntrack
 # github.com/oracle/oci-go-sdk/v40 v40.4.0
 ## explicit
-github.com/oracle/oci-go-sdk/v40/common
-github.com/oracle/oci-go-sdk/v40/common/auth
-github.com/oracle/oci-go-sdk/v40/core
+# github.com/oracle/oci-go-sdk/v65 v65.81.1
+## explicit
+github.com/oracle/oci-go-sdk/v65/common
+github.com/oracle/oci-go-sdk/v65/common/auth
+github.com/oracle/oci-go-sdk/v65/common/utils
+github.com/oracle/oci-go-sdk/v65/core
 # github.com/pelletier/go-toml v1.8.1
 ## explicit
 github.com/pelletier/go-toml
@@ -55,6 +60,8 @@ github.com/prometheus/prometheus/discovery/targetgroup
 # github.com/sirupsen/logrus v1.8.1
 ## explicit
 github.com/sirupsen/logrus
+# github.com/sony/gobreaker v0.5.0
+github.com/sony/gobreaker
 # github.com/spf13/pflag v1.0.5
 ## explicit
 github.com/spf13/pflag
@@ -71,7 +78,7 @@ golang.org/x/net/trace
 golang.org/x/oauth2
 golang.org/x/oauth2/clientcredentials
 golang.org/x/oauth2/internal
-# golang.org/x/sys v0.0.0-20220114195835-da31bd327af9
+# golang.org/x/sys v0.8.0
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
