@@ -196,6 +196,41 @@ func (d *Discovery) Run(ctx context.Context, ch chan<- []*targetgroup.Group) {
 	}
 }
 
+func getOCIInstances(computeClient core.ComputeClient, compartmentId *string, page *string) (ociInstances []core.Instance, err error) {
+	fmt.Println("== Inside getOCIINstances ==")
+	if page == nil {
+		fmt.Println("> page is nil")
+		page = common.String("")
+	}
+
+	fmt.Println("> listing instances")
+	res, err := computeClient.ListInstances(
+		context.Background(),
+		core.ListInstancesRequest{
+			CompartmentId:  compartmentId,
+			Limit:          common.Int(100),
+			Page:           page,
+			LifecycleState: core.InstanceLifecycleStateRunning,
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("could not obtain list of instances: %s", err)
+	}
+	fmt.Printf("> founded %d instances\n", len(res.Items))
+	if res.OpcNextPage != nil {
+		fmt.Println("> starting recursive")
+		ociInstances, err = getOCIInstances(computeClient, compartmentId, res.OpcNextPage)
+		fmt.Printf("> ociInstances values: %d\n", len(ociInstances))
+		if err != nil {
+			fmt.Errorf("Error in request")
+			return nil, err
+		}
+		return append(ociInstances, res.Items...), err
+	}
+
+	return append(ociInstances, res.Items...), err
+}
+
 func (d *Discovery) refresh() (tg *targetgroup.Group, err error) {
 	tg = &targetgroup.Group{
 		Source: d.sdConfig.Region,
@@ -209,15 +244,15 @@ func (d *Discovery) refresh() (tg *targetgroup.Group, err error) {
 	if err != nil {
 		return nil, err
 	}
-	res, err := computeClient.ListInstances(
-		context.Background(),
-		core.ListInstancesRequest{CompartmentId: &d.sdConfig.Compartment},
-	)
-	if err != nil {
-		return nil, fmt.Errorf("could not obtain list of instances: %s", err)
-	}
 
-	for _, instance := range res.Items {
+	fmt.Println("==> Starting OCI instances request")
+	ociInstances, err := getOCIInstances(computeClient, &d.sdConfig.Compartment, nil)
+	if err != nil {
+		fmt.Println("--> FUCK IT")
+	}
+	fmt.Printf("== Founded %d", len(ociInstances))
+
+	for _, instance := range ociInstances {
 		res, err := computeClient.ListVnicAttachments(
 			context.Background(),
 			core.ListVnicAttachmentsRequest{
