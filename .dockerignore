@@ -1,0 +1,8 @@
+.*
+!adapter/
+!oci/
+!config.go
+!go.mod
+!main.go
+!Makefile
+!dockerfile/oci-sd.tmpl
