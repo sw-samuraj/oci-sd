@@ -18,6 +18,7 @@
 1. [License](#license)
 
 ## How it works
+> ❗This fork support pagination during ListInstances request
 
 Unfortunately, _Prometheus_ team [doesn't accept new service discovery
 integrations](https://github.com/prometheus/prometheus/issues/4322#issuecomment-401828508) in the _Prometheus_
